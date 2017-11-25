@@ -18,6 +18,7 @@ import java.util.List;
 import br.inatel.aluno.projecttcc.adapter.PresentesAdapter;
 import br.inatel.aluno.projecttcc.listener.RecyclerTouchListener;
 import br.inatel.aluno.projecttcc.model.Aluno;
+import br.inatel.aluno.projecttcc.model.Aula;
 import br.inatel.aluno.projecttcc.model.Materia;
 
 
@@ -30,8 +31,11 @@ public class PresentesFragment extends Fragment implements SwipeRefreshLayout.On
     private TextView mPercenteText;
 
     private Materia mMateria;
-    public PresentesFragment getInstance(Materia materia){
+    private Aula mAula;
+
+    public PresentesFragment getInstance(Materia materia, Aula aula){
         mMateria = materia;
+        mAula = aula;
         return this;
     }
 

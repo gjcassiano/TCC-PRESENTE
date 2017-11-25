@@ -32,6 +32,9 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.android.gms:play-services-gcm:10.2.6'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
+    compile 'com.mcxiaoke.volley:library:1.0.17'
     testCompile 'junit:junit:4.12'
     compile project(path: ':backend', configuration: 'android-endpoints')
+//    compile 'com.amitshekhar.android:jackson-android-networking:1.0.0'
+    compile 'com.amitshekhar.android:android-networking:1.0.0'
 }

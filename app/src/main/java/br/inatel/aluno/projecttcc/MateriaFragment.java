@@ -1,14 +1,16 @@
 package br.inatel.aluno.projecttcc;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +18,20 @@ import java.util.List;
 import br.inatel.aluno.projecttcc.adapter.MateriaAdapter;
 import br.inatel.aluno.projecttcc.listener.RecyclerTouchListener;
 import br.inatel.aluno.projecttcc.model.Materia;
+import br.inatel.aluno.projecttcc.service.MateriaService;
 
-public class MateriaFragment extends Fragment {
+public class MateriaFragment extends Fragment{
+    private static final String TAG = MateriaFragment.class.getSimpleName();
     private List<Materia> materiaList = new ArrayList<>();
     private RecyclerView recyclerView;
     private MateriaAdapter mAdapter;
-
+    ProgressDialogPresente progressDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.materia_content_layout, container, false);
-
+//        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_materia);
+//        swipeRefreshLayout.setOnRefreshListener(this);
+        progressDialog = new ProgressDialogPresente(getContext());
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
 
         mAdapter = new MateriaAdapter(materiaList);
@@ -47,34 +53,31 @@ public class MateriaFragment extends Fragment {
         }));
         recyclerView.setAdapter(mAdapter);
 
-        prepareMovieData();
+        final MateriaService materiaService = new MateriaService();
+        materiaService.execute("list");
+        progressDialog.showProgressDialog("Buscando materias...");
+        updateList(materiaService,500);
+        updateList(materiaService,1000);
+        updateList(materiaService,1500);
+        updateList(materiaService,2000);
+        updateList(materiaService,3000);
+        updateList(materiaService,5000);
+        updateList(materiaService,10000);
+        Log.i(TAG, Build.SERIAL);
         return v;
-
     }
-
-    private void prepareMovieData() {
-        materiaList.add(new Materia(1,"Calculo 1", "NB001","A"));
-        materiaList.add(new Materia(2,"Calculo 1", "NB001","B"));
-        materiaList.add(new Materia(3,"Calculo 1", "NB001","C"));
-        materiaList.add(new Materia(4,"Calculo 2", "NB001","A"));
-        materiaList.add(new Materia(5,"Calculo 2", "NB001","B"));
-        materiaList.add(new Materia(6,"Calculo 2", "NB001","C"));
-        materiaList.add(new Materia(7,"Calculo 3", "NB001","A"));
-        materiaList.add(new Materia(8,"Calculo 3", "NB001","B"));
-        materiaList.add(new Materia(9,"Calculo 3", "NB001","C"));
-        materiaList.add(new Materia(10,"Fisica 1", "NB001","A"));
-        materiaList.add(new Materia(11,"Fisica 1", "NB001","B"));
-        materiaList.add(new Materia(12,"Fisica 1", "NB001","C"));
-        materiaList.add(new Materia(13,"Fisica 2", "NB001","A"));
-        materiaList.add(new Materia(14,"Fisica 2", "NB001","B"));
-        materiaList.add(new Materia(15,"Fisica 2", "NB001","C"));
-        materiaList.add(new Materia(16,"Fisica 3", "NB001","A"));
-        materiaList.add(new Materia(17,"Fisica 3", "NB001","B"));
-        materiaList.add(new Materia(18,"Fisica 3", "NB001","C"));
-        materiaList.add(new Materia(19,"Atividade Complementar 1", "NB001","A"));
-        materiaList.add(new Materia(20,"Atividade Complementar 1", "NB001","B"));
-        materiaList.add(new Materia(21,"Atividade Complementar 1", "NB001","C"));
-        mAdapter.notifyDataSetChanged();
+    private void updateList(final MateriaService materiaService, int time){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (materiaService.getMaterias().size()>0){
+                    materiaList.clear();
+                    materiaList.addAll(materiaService.getMaterias());
+                    mAdapter.notifyDataSetChanged();
+                    progressDialog.hideProgressDialog();
+                }
+            }
+        },time);
     }
 
     void changeFragment(Materia materia){

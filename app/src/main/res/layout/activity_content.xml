@@ -14,11 +14,23 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/menu" />
 
-    <fragment
+    <TextView
+        android:id="@+id/carregando_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="Carregando"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <FrameLayout
         android:id="@+id/frame_container"
         android:name="br.inatel.aluno.projecttcc.MateriaFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/map_layout" />
+        tools:layout="@layout/map_layout" >
+
+    </FrameLayout>
 
 </android.support.v4.widget.DrawerLayout>

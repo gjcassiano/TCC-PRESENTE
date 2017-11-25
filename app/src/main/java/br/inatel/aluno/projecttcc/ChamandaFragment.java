@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,23 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.example.unknown.myapplication.backend.presente.model.User;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
+
+import br.inatel.aluno.projecttcc.model.Aula;
 import br.inatel.aluno.projecttcc.model.Materia;
+
+import static android.content.ContentValues.TAG;
+import static br.inatel.aluno.projecttcc.service.RequestService.urlRoot;
 
 public class ChamandaFragment extends Fragment {
 
@@ -112,9 +129,19 @@ public class ChamandaFragment extends Fragment {
         }
     }
 
+    Aula mAula = new Aula();
     void changeFragment(){
 
-        Fragment newFragment = new MapViewFragment().getInstance(mMateria);
+        mAula.setInfo(mInfo.getText().toString());
+        mAula.setHoraStart(mHora.getText().toString());
+        mAula.setDataAula(new Date(mData.getText().toString()));
+        changePage();
+    }
+
+
+
+    private void changePage(){
+        Fragment newFragment = new MapViewFragment().getInstance(mMateria, mAula);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
@@ -125,9 +152,7 @@ public class ChamandaFragment extends Fragment {
         transaction.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.addToBackStack(null);
 
-// Commit the transaction
+        // Commit the transaction
         transaction.commit();
     }
-
-
 }

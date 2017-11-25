@@ -24,7 +24,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.location.LocationListener;
 
-import com.google.android.gms.location.LocationRequest;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,9 +39,17 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.api.client.util.DateTime;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import br.inatel.aluno.projecttcc.model.Aula;
 import br.inatel.aluno.projecttcc.model.Materia;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static br.inatel.aluno.projecttcc.service.RequestService.urlRoot;
 
 public class MapViewFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
@@ -66,8 +77,11 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
     private static final long MIN_TIME_BW_UPDATES = 1000 * 1;
 
     private Materia mMateria;
-    public MapViewFragment getInstance(Materia materia){
+    private Aula mAula;
+
+    public MapViewFragment getInstance(Materia materia, Aula aula){
         mMateria = materia;
+        mAula = aula;
         return this;
     }
 
@@ -95,6 +109,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                mAula.setRaio((long) (mRadioMinimo + seekBar.getProgress()));
                 Toast.makeText(mContext, String.format("Raio ajustado para %d metros.", mRadioMinimo + seekBar.getProgress()),
                         Toast.LENGTH_SHORT).show();
             }
@@ -133,7 +148,8 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
                     public void onClick(DialogInterface arg0, int arg1) {
                         Toast.makeText(mContext, "Iniciando chamada.",
                                 Toast.LENGTH_SHORT).show();
-                        changeFragment(mMateria);
+                            executeChamada();     
+//                        changeFragment(mMateria);
                     }
                 });
 
@@ -184,9 +200,13 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
         onLocationChanged(mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
     }
 
+    private Location lastLocation;
+
     @Override
     public void onLocationChanged(Location location) {
         if (location == null) return;
+        lastLocation = location;
+
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
         if (mapMarker == null) {
@@ -202,7 +222,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
         goCamera(latLng);
         mLocationTxt.setText("Localização:" + location.getLatitude() + ", " + location.getLongitude());
     }
-
     private void goCamera(LatLng latLng) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
         mGoogleMap.animateCamera(cameraUpdate);
@@ -222,9 +241,71 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
     public void onProviderDisabled(String provider) {
 
     }
-    void changeFragment(Materia materia){
 
-        Fragment newFragment = new PresentesFragment().getInstance(materia);
+    private void executeChamada() {
+            if (mAula.getRaio() == null){
+                mAula.setRaio((long) mRadioMinimo);
+            }
+
+            mAula.setLatitude(lastLocation.getLatitude());
+            mAula.setLongitude(lastLocation.getLongitude());
+
+            Log.i(TAG, String.valueOf(new DateTime( mAula.getDataAula())));
+            Log.i(TAG, String.valueOf(mMateria.getId()));
+            Log.i(TAG, mAula.getInfo());
+            Log.i(TAG, String.valueOf(mAula.getRaio()));
+            Log.i(TAG, mAula.getHoraStart());
+            Log.i(TAG, String.valueOf(mAula.getLatitude()));
+            Log.i(TAG, String.valueOf(mAula.getLongitude()));
+
+            AndroidNetworking.get(urlRoot + "aulas/create")
+                    .setTag("TCC")
+                    .addQueryParameter("materia", String.valueOf(mMateria.getId()))
+                    .addQueryParameter("dataAula",String.valueOf(new DateTime( mAula.getDataAula())))
+                    .addQueryParameter("info", mAula.getInfo())
+                    .addQueryParameter("raio", String.valueOf(mAula.getRaio()))
+                    .addQueryParameter("horaStart", mAula.getHoraStart())
+                    .addQueryParameter("latitude", String.valueOf(mAula.getLatitude()))
+                    .addQueryParameter("longitude", String.valueOf(mAula.getLongitude()))
+                    .addQueryParameter("status", "0")
+                    .setPriority(Priority.IMMEDIATE).build().getAsJSONObject(new JSONObjectRequestListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+
+                        JSONArray items = (JSONArray) response.get("items");
+                        Log.i(TAG,items.toString());
+
+                        for(int n = 0; n < items.length(); n++){
+                            JSONObject object = items.getJSONObject(n);
+                            mAula.setId(object.getLong("id"));
+                            mAula.setStatus(object.getLong("status"));
+                        }
+
+                        changeFragment(mMateria, mAula);
+
+                    } catch (JSONException e) {
+
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(ANError e) {
+                    Log.i(TAG, e.getMessage());
+                    Log.i(TAG, e.getLocalizedMessage());
+                    Log.i(TAG, e.getCause() + "");
+                    Log.i(TAG, e.getStackTrace().toString());
+                    e.printStackTrace();
+                    Log.i(TAG, "Erro:" + e.getMessage());
+                }
+            });
+        }
+
+
+    void changeFragment(Materia materia, Aula aula ){
+
+        Fragment newFragment = new PresentesFragment().getInstance(materia, aula);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);

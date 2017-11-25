@@ -3,6 +3,8 @@ package br.inatel.aluno.projecttcc;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -42,9 +44,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     // UI references.
     private AutoCompleteTextView mMatriculaView;
-    private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    SharedPreferences sharedpreferences;
+    public static final String MY_PREFERENCES = "PRESENTE" ;
+    public static final String MATRICULA = "matricula";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +58,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mMatriculaView = (AutoCompleteTextView) findViewById(R.id.matricula);
         populateAutoComplete();
-
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -134,21 +127,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Reset errors.
         mMatriculaView.setError(null);
-        mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
         String matricula = mMatriculaView.getText().toString();
-        String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(matricula)) {
@@ -169,7 +154,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(matricula, password);
+            mAuthTask = new UserLoginTask(matricula);
             mAuthTask.execute((Void) null);
         }
     }
@@ -269,7 +254,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     /**
@@ -279,18 +263,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mMatricula;
-        private final String mPassword;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email) {
             mMatricula = email;
-            mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 // Simulate network access.
-                Thread.sleep(4000);
+                Thread.sleep(500);
+                sharedpreferences = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(MATRICULA, mMatricula);
+                editor.commit();
             } catch (InterruptedException e) {
                 return false;
             }
@@ -304,9 +290,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
             }
         }
 

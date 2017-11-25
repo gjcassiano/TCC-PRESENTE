@@ -1,12 +1,12 @@
 package br.inatel.aluno.projecttcc.model;
 
 public class Materia {
-    private int id;
+    private Long id;
     private String nome;
     private String sigla;
     private String turma;
 
-    public Materia(int id, String nome, String sigla, String turma){
+    public Materia(Long id, String nome, String sigla, String turma){
         this.id = id;
         this.nome = nome;
         this.sigla = sigla;
@@ -36,11 +36,11 @@ public class Materia {
         this.turma = turma;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

@@ -10,14 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.unknown.myapplication.backend.presente.model.User;
+
 import java.util.List;
 
 import br.inatel.aluno.projecttcc.R;
-import br.inatel.aluno.projecttcc.model.Aluno;
 
 public class PresentesAdapter extends RecyclerView.Adapter<PresentesAdapter.MyViewHolder> {
 
-    private List<Aluno> alunosList;
+    private List<User> alunosList;
     private Drawable mCheckDrawable;
     private Drawable mCloseDrawable;
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -35,7 +36,7 @@ public class PresentesAdapter extends RecyclerView.Adapter<PresentesAdapter.MyVi
 
 
 
-    public PresentesAdapter(List<Aluno> alunos) {
+    public PresentesAdapter(List<User> alunos) {
         this.alunosList = alunos;
     }
 
@@ -53,11 +54,11 @@ public class PresentesAdapter extends RecyclerView.Adapter<PresentesAdapter.MyVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Aluno aluno= alunosList.get(position);
-        holder.nome.setText(aluno.getNome());
-        holder.matricula.setText(aluno.getMatricula());
+        User aluno= alunosList.get(position);
+        holder.nome.setText(aluno.getName());
+        holder.matricula.setText(aluno.getMatricula()+"");
 
-        if (aluno.isPresente()){
+        if (aluno.getPresente()){
             holder.presente.setBackground(mCheckDrawable);
         } else {
             holder.presente.setBackground(mCloseDrawable);

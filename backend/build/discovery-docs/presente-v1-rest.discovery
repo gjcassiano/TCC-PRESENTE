@@ -1,0 +1,719 @@
+{
+ "kind": "discovery#restDescription",
+ "etag": "\"RnkXbyw9us4_w3H-FU6An0C4oYs/lMZhSPsNVtNYZpKLBbzVz4nidHA\"",
+ "discoveryVersion": "v1",
+ "id": "presente:v1",
+ "name": "presente",
+ "version": "v1",
+ "description": "This is an API",
+ "ownerDomain": "backend.myapplication.UNKNOWN.example.com",
+ "ownerName": "backend.myapplication.UNKNOWN.example.com",
+ "icons": {
+  "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+  "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+ },
+ "protocol": "rest",
+ "baseUrl": "https://groovy-works-180421.appspot.com/_ah/api/presente/v1/",
+ "basePath": "/_ah/api/presente/v1/",
+ "rootUrl": "https://groovy-works-180421.appspot.com/_ah/api/",
+ "servicePath": "presente/v1/",
+ "batchPath": "batch",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "Aula": {
+   "id": "Aula",
+   "type": "object",
+   "properties": {
+    "dataAula": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "horaEnd": {
+     "type": "string"
+    },
+    "horaStart": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "info": {
+     "type": "string"
+    },
+    "latitude": {
+     "type": "number",
+     "format": "double"
+    },
+    "longitude": {
+     "type": "number",
+     "format": "double"
+    },
+    "materia": {
+     "type": "string",
+     "format": "int64"
+    },
+    "raio": {
+     "type": "string",
+     "format": "int64"
+    },
+    "status": {
+     "type": "string",
+     "format": "int64"
+    }
+   }
+  },
+  "AulaRelationUser": {
+   "id": "AulaRelationUser",
+   "type": "object",
+   "properties": {
+    "aluno": {
+     "type": "string",
+     "format": "int64"
+    },
+    "aula": {
+     "type": "string",
+     "format": "int64"
+    },
+    "composite": {
+     "type": "string"
+    },
+    "date": {
+     "type": "string",
+     "format": "date-time"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "presente": {
+     "type": "boolean"
+    }
+   }
+  },
+  "CollectionResponse_Aula": {
+   "id": "CollectionResponse_Aula",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Aula"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "CollectionResponse_AulaRelationUser": {
+   "id": "CollectionResponse_AulaRelationUser",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "AulaRelationUser"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "CollectionResponse_Materia": {
+   "id": "CollectionResponse_Materia",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Materia"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "CollectionResponse_MateriaRelationUser": {
+   "id": "CollectionResponse_MateriaRelationUser",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "MateriaRelationUser"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "CollectionResponse_RegistrationRecord": {
+   "id": "CollectionResponse_RegistrationRecord",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "RegistrationRecord"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "CollectionResponse_User": {
+   "id": "CollectionResponse_User",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "User"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "Materia": {
+   "id": "Materia",
+   "type": "object",
+   "properties": {
+    "alunos": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "int64"
+     }
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "nome": {
+     "type": "string"
+    },
+    "professor": {
+     "type": "string",
+     "format": "int64"
+    },
+    "sigla": {
+     "type": "string"
+    }
+   }
+  },
+  "MateriaRelationUser": {
+   "id": "MateriaRelationUser",
+   "type": "object",
+   "properties": {
+    "composite": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "materia": {
+     "type": "string",
+     "format": "int64"
+    },
+    "user": {
+     "type": "string",
+     "format": "int64"
+    }
+   }
+  },
+  "RegistrationRecord": {
+   "id": "RegistrationRecord",
+   "type": "object",
+   "properties": {
+    "regId": {
+     "type": "string"
+    }
+   }
+  },
+  "User": {
+   "id": "User",
+   "type": "object",
+   "properties": {
+    "email": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "matricula": {
+     "type": "string",
+     "format": "int64"
+    },
+    "name": {
+     "type": "string"
+    },
+    "presente": {
+     "type": "boolean"
+    },
+    "serialNumber": {
+     "type": "string"
+    },
+    "userType": {
+     "type": "string",
+     "format": "int64"
+    }
+   }
+  }
+ },
+ "methods": {
+  "listDevices": {
+   "id": "presente.listDevices",
+   "path": "registrationrecord/{count}",
+   "httpMethod": "GET",
+   "parameters": {
+    "count": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "count"
+   ],
+   "response": {
+    "$ref": "CollectionResponse_RegistrationRecord"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "register": {
+   "id": "presente.register",
+   "path": "registerDevice/{regId}",
+   "httpMethod": "POST",
+   "parameters": {
+    "regId": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "regId"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "unregister": {
+   "id": "presente.unregister",
+   "path": "unregisterDevice/{regId}",
+   "httpMethod": "POST",
+   "parameters": {
+    "regId": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "regId"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ },
+ "resources": {
+  "aulas": {
+   "methods": {
+    "create": {
+     "id": "presente.aulas.create",
+     "path": "aulas/create",
+     "httpMethod": "POST",
+     "request": {
+      "$ref": "Aula",
+      "parameterName": "resource"
+     },
+     "response": {
+      "$ref": "CollectionResponse_Aula"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    },
+    "finalizar": {
+     "id": "presente.aulas.finalizar",
+     "path": "aulas/finalizar",
+     "httpMethod": "POST",
+     "parameters": {
+      "aula": {
+       "type": "string",
+       "required": true,
+       "format": "int64",
+       "location": "query"
+      }
+     },
+     "parameterOrder": [
+      "aula"
+     ],
+     "response": {
+      "$ref": "CollectionResponse_Aula"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    },
+    "get": {
+     "id": "presente.aulas.get",
+     "path": "aulas/get",
+     "httpMethod": "GET",
+     "parameters": {
+      "materia": {
+       "type": "string",
+       "required": true,
+       "format": "int64",
+       "location": "query"
+      }
+     },
+     "parameterOrder": [
+      "materia"
+     ],
+     "response": {
+      "$ref": "CollectionResponse_Aula"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    },
+    "list": {
+     "id": "presente.aulas.list",
+     "path": "aulas/list",
+     "httpMethod": "GET",
+     "response": {
+      "$ref": "CollectionResponse_Aula"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    }
+   },
+   "resources": {
+    "materias": {
+     "resources": {
+      "alunos": {
+       "methods": {
+        "abertas": {
+         "id": "presente.aulas.materias.alunos.abertas",
+         "path": "users/materias/alunos/abertas",
+         "httpMethod": "GET",
+         "parameters": {
+          "aluno": {
+           "type": "string",
+           "required": true,
+           "format": "int64",
+           "location": "query"
+          }
+         },
+         "parameterOrder": [
+          "aluno"
+         ],
+         "response": {
+          "$ref": "CollectionResponse_Aula"
+         },
+         "scopes": [
+          "https://www.googleapis.com/auth/userinfo.email"
+         ]
+        }
+       }
+      }
+     }
+    },
+    "user": {
+     "methods": {
+      "all": {
+       "id": "presente.aulas.user.all",
+       "path": "aulas/user/all",
+       "httpMethod": "GET",
+       "parameters": {
+        "aula": {
+         "type": "string",
+         "required": true,
+         "format": "int64",
+         "location": "query"
+        }
+       },
+       "parameterOrder": [
+        "aula"
+       ],
+       "response": {
+        "$ref": "CollectionResponse_User"
+       },
+       "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email"
+       ]
+      },
+      "presente": {
+       "id": "presente.aulas.user.presente",
+       "path": "aulas/user/presente",
+       "httpMethod": "POST",
+       "parameters": {
+        "aluno": {
+         "type": "string",
+         "required": true,
+         "format": "int64",
+         "location": "query"
+        },
+        "aula": {
+         "type": "string",
+         "required": true,
+         "format": "int64",
+         "location": "query"
+        },
+        "presente": {
+         "type": "boolean",
+         "location": "query"
+        }
+       },
+       "parameterOrder": [
+        "aluno",
+        "aula"
+       ],
+       "response": {
+        "$ref": "CollectionResponse_AulaRelationUser"
+       },
+       "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "materias": {
+   "methods": {
+    "create": {
+     "id": "presente.materias.create",
+     "path": "materias/create",
+     "httpMethod": "POST",
+     "request": {
+      "$ref": "Materia",
+      "parameterName": "resource"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    },
+    "list": {
+     "id": "presente.materias.list",
+     "path": "materias/list",
+     "httpMethod": "GET",
+     "response": {
+      "$ref": "CollectionResponse_Materia"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    }
+   },
+   "resources": {
+    "user": {
+     "methods": {
+      "create": {
+       "id": "presente.materias.user.create",
+       "path": "materias/user/create",
+       "httpMethod": "POST",
+       "request": {
+        "$ref": "MateriaRelationUser",
+        "parameterName": "resource"
+       },
+       "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email"
+       ]
+      },
+      "list": {
+       "id": "presente.materias.user.list",
+       "path": "materias/user/list",
+       "httpMethod": "GET",
+       "response": {
+        "$ref": "CollectionResponse_MateriaRelationUser"
+       },
+       "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "messagingEndpoint": {
+   "methods": {
+    "sendMessage": {
+     "id": "presente.messagingEndpoint.sendMessage",
+     "path": "sendMessage/{message}",
+     "httpMethod": "POST",
+     "parameters": {
+      "message": {
+       "type": "string",
+       "required": true,
+       "location": "path"
+      }
+     },
+     "parameterOrder": [
+      "message"
+     ],
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    }
+   }
+  },
+  "users": {
+   "methods": {
+    "create": {
+     "id": "presente.users.create",
+     "path": "users/create",
+     "httpMethod": "POST",
+     "request": {
+      "$ref": "User",
+      "parameterName": "resource"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    },
+    "get": {
+     "id": "presente.users.get",
+     "path": "users/get",
+     "httpMethod": "GET",
+     "parameters": {
+      "deviceSerial": {
+       "type": "string",
+       "required": true,
+       "location": "query"
+      },
+      "matricula": {
+       "type": "string",
+       "required": true,
+       "format": "int64",
+       "location": "query"
+      },
+      "name": {
+       "type": "string",
+       "required": true,
+       "location": "query"
+      }
+     },
+     "parameterOrder": [
+      "deviceSerial",
+      "matricula",
+      "name"
+     ],
+     "response": {
+      "$ref": "CollectionResponse_User"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    },
+    "list": {
+     "id": "presente.users.list",
+     "path": "users/list",
+     "httpMethod": "GET",
+     "response": {
+      "$ref": "CollectionResponse_User"
+     },
+     "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email"
+     ]
+    }
+   },
+   "resources": {
+    "materia": {
+     "methods": {
+      "get": {
+       "id": "presente.users.materia.get",
+       "path": "users/materias/get",
+       "httpMethod": "GET",
+       "parameters": {
+        "materia": {
+         "type": "string",
+         "required": true,
+         "format": "int64",
+         "location": "query"
+        }
+       },
+       "parameterOrder": [
+        "materia"
+       ],
+       "response": {
+        "$ref": "CollectionResponse_User"
+       },
+       "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email"
+       ]
+      }
+     }
+    }
+   }
+  }
+ }
+}

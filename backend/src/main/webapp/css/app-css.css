@@ -1,0 +1,35 @@
+.container {
+    position: relative;
+    height:90%;
+}
+
+.container:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: url('../componetes/bg.jpeg');
+    background-size: 100%;
+    opacity: 0.8;
+}
+.container:hover{
+    opacity: 0.9;
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    letter-spacing: 6px;
+    text-shadow: 0 0 2px black;
+}​
+.content:hover {
+    text-shadow: 0 0 5px black;
+}
+
+.md-fab {
+    float: right
+}

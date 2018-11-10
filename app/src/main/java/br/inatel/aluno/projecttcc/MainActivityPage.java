@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -17,10 +18,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.example.unknown.myapplication.backend.presente.model.User;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import br.inatel.aluno.projecttcc.service.UserService;
+
+import static br.inatel.aluno.projecttcc.service.RequestService.urlRoot;
 
 public class MainActivityPage extends AppCompatActivity {
 
@@ -39,16 +51,22 @@ public class MainActivityPage extends AppCompatActivity {
         while (!checkAndRequestPermissions()){}
 
     }
-
+    boolean openedLogin = false;
     @Override
     protected void onResume() {
         super.onResume();
+        if (openedLogin){
+            updateUser();
+            return;
+        }
+        sharedpreferences = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
         String matricula = sharedpreferences.getString(MATRICULA, null);
-
         if(matricula == null){
+            openedLogin = true;
             Intent i = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(i);
         } else {
+            openedLogin = false;
             updateUser();
         }
     }
@@ -58,35 +76,62 @@ public class MainActivityPage extends AppCompatActivity {
         super.onPause();
         changedPage = false;
     }
-
+    User user = new User();
     public void updateUser(){
         progressDialog.showProgressDialog("Buscando usuario...");
         setContentView(R.layout.activity_content);
-        UserService userService = new UserService();
-        userService.getUserExecute(sharedpreferences.getString(MATRICULA, null),"UNKNOW");
+
+
+        AndroidNetworking.get(urlRoot + "users/get")
+                .setTag("TCC")
+                .addQueryParameter("deviceSerial", Build.SERIAL )
+                .addQueryParameter("matricula",sharedpreferences.getString(MATRICULA, null))
+                .addQueryParameter("name", "UNKNOW")
+                .setPriority(Priority.IMMEDIATE).build().getAsJSONObject(new JSONObjectRequestListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray items = (JSONArray) response.get("items");
+                    Log.i(TAG,items.toString());
+                    for(int n = 0; n < items.length(); n++)
+                    {
+                        JSONObject object = items.getJSONObject(n);
+                        user.setId(object.getLong("id"));
+                        user.setName(object.getString("name"));
+                        user.setSerialNumber(object.getString("serialNumber"));
+                        user.setMatricula(object.getLong("matricula"));
+                        user.setUserType(object.getLong("userType"));
+                        updateList();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(ANError anError) {
+                Log.i(TAG, "Erro:" + anError.getMessage());
+            }
+        });
+
         carregandoText = (TextView)findViewById(R.id.carregando_id);
 
-        updateList(userService,500);
-        updateList(userService,1000);
-        updateList(userService,1500);
-        updateList(userService,2000);
-        updateList(userService,3000);
-        updateList(userService,5000);
-        updateList(userService,10000);
     }
 
     Handler handler = new Handler();
     Boolean changedPage = false;
-    private void updateList(final UserService userService, int time){
-        handler.postDelayed(new Runnable() {
+
+    private void updateList(){
+        handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG,"Carregando user: " + userService.getUser());
-            if (userService.getUser() != null && !changedPage){
+                Log.i(TAG,"Carregando user: " + user.getName() + " id:" + user.getId());
+            if (user != null && !changedPage){
                 changedPage = true;
                 carregandoText.setVisibility(View.INVISIBLE);
                 //check if aluno or prof
-                if(userService.getUser().getUserType() == 1) {
+                if(user.getUserType() == 1) {
                     //prof
                     Log.i(TAG,"Professor logado.");
                     Fragment newFragment = new MateriaFragment();
@@ -96,7 +141,7 @@ public class MainActivityPage extends AppCompatActivity {
                 } else {
                     Log.i(TAG,"Aluno logado.");
                     //aluno
-                    Fragment newFragment = new AlunoFragment().setUserId(userService.getUser().getId());
+                    Fragment newFragment = new AlunoFragment().setUserId(user.getId());
                     android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame_container, newFragment);
                     transaction.commit();
@@ -107,7 +152,7 @@ public class MainActivityPage extends AppCompatActivity {
                 carregandoText.setText(carregandoText.getText() + ".");
             }
             }
-        },time);
+        });
     }
 
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;

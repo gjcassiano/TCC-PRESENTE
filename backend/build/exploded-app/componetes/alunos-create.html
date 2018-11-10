@@ -1,0 +1,46 @@
+<md-card layout-padding>
+
+    <md-card-title-text class="md-headline" layout="column" layout-padding  >
+        <md-input-container layout-marging >
+            <label>Criar usuario</label>
+        </md-input-container>
+    </md-card-title-text>
+
+    <md-content class="" >
+            <md-input-container layout-padding>
+                <label>Matricula</label>
+                <input ng-model="user.matricula">
+            </md-input-container>
+
+            <md-input-container layout-padding >
+                <label>Nome</label>
+                <input ng-model="user.name">
+            </md-input-container>
+
+            <div layout="row">
+                <md-input-container>
+                    <label>Email</label>
+                    <input ng-model="user.email" type="email">
+                </md-input-container>
+
+                <md-input-container flex="20" >
+                    <label>Tipo de usuario</label>
+                    <md-select name="type" ng-model="user.userType" required>
+                        <md-option value="1">PROFESSOR</md-option>
+                        <md-option value="0">ALUNO</md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+
+        <md-input-container>
+
+            <md-button ng-click="navigate('alunos')" class="md-raised">Cancelar</md-button>
+            <md-button ng-if = "!editarUser" ng-click="criar(user)" class="md-raised">Criar</md-button>
+            <md-button ng-if = "editarUser" ng-click="criar(user)" class="md-raised">Salvar</md-button>
+
+        </md-input-container>
+    </md-content>
+
+
+</md-card>

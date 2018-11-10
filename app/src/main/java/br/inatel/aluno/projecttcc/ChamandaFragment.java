@@ -11,7 +11,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,23 +18,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.example.unknown.myapplication.backend.presente.model.User;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Date;
 
 import br.inatel.aluno.projecttcc.model.Aula;
 import br.inatel.aluno.projecttcc.model.Materia;
-
-import static android.content.ContentValues.TAG;
-import static br.inatel.aluno.projecttcc.service.RequestService.urlRoot;
 
 public class ChamandaFragment extends Fragment {
 
@@ -54,6 +40,7 @@ public class ChamandaFragment extends Fragment {
         mMateria = materia;
         return this;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.info_chamada, container, false);
@@ -71,6 +58,14 @@ public class ChamandaFragment extends Fragment {
         mTurma.setText(mMateria.getTurma());
 
         mObserv.setText("Observações");
+        Date datef = new Date();
+
+        mData.setText((datef.getDay()<10 ? "0" + String.valueOf(datef.getDay()):String.valueOf(datef.getDay()))+ "/" +
+                (datef.getMonth()<10 ? "0" + String.valueOf(datef.getMonth()):String.valueOf(datef.getMonth()))+ "/" +
+                String.valueOf(datef.getYear()));
+
+        mHora.setText(String.valueOf(datef.getHours()) + ":" + (datef.getMinutes()<10 ? "0" +
+                String.valueOf(datef.getMinutes()):String.valueOf(datef.getMinutes())));
 
         mHora.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,8 +146,8 @@ public class ChamandaFragment extends Fragment {
         transaction.replace(R.id.frame_container, newFragment);
         transaction.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.addToBackStack(null);
-
+        //transaction. executePendingTransactions();
         // Commit the transaction
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 }

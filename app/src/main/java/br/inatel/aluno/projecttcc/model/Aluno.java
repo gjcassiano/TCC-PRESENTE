@@ -7,6 +7,7 @@ package br.inatel.aluno.projecttcc.model;
 public class Aluno {
     private int id;
     private String nome;
+    private String email;
     private String matricula;
     private boolean presente;
 
@@ -16,6 +17,7 @@ public class Aluno {
         this.matricula = matricula;
         this.presente = presente;
     }
+
 
     public String getNome() {
         return nome;
@@ -47,5 +49,13 @@ public class Aluno {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

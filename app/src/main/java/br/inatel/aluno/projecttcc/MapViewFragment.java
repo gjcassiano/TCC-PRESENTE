@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -79,18 +82,21 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
     private Materia mMateria;
     private Aula mAula;
 
-    public MapViewFragment getInstance(Materia materia, Aula aula){
+    public MapViewFragment getInstance(Materia materia, Aula aula) {
         mMateria = materia;
         mAula = aula;
         return this;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.map_layout, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        View v = inflater.inflate(R.layout.map_layout, container, false);
+        mapView = (MapView) v.findViewById(R.id.mapview);
         // Gets the MapView from the XML layout and creates it
         mapView = (MapView) v.findViewById(R.id.mapview);
+
         mSeekBar = (SeekBar) v.findViewById(R.id.seekBar_id);
         mCircleOptions = new CircleOptions();
         mCircleOptions.center(INATEL_POSITION).radius(mRadioMinimo + 25).
@@ -148,7 +154,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
                     public void onClick(DialogInterface arg0, int arg1) {
                         Toast.makeText(mContext, "Iniciando chamada.",
                                 Toast.LENGTH_SHORT).show();
-                            executeChamada();     
+                        executeChamada();
 //                        changeFragment(mMateria);
                     }
                 });
@@ -197,6 +203,17 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
         }
         mapCircle = mGoogleMap.addCircle(mCircleOptions);
 
+        if (ActivityCompat.checkSelfPermission(this.mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this.mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         onLocationChanged(mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
     }
 
@@ -249,7 +266,6 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
 
             mAula.setLatitude(lastLocation.getLatitude());
             mAula.setLongitude(lastLocation.getLongitude());
-
             Log.i(TAG, String.valueOf(new DateTime( mAula.getDataAula())));
             Log.i(TAG, String.valueOf(mMateria.getId()));
             Log.i(TAG, mAula.getInfo());
@@ -258,7 +274,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
             Log.i(TAG, String.valueOf(mAula.getLatitude()));
             Log.i(TAG, String.valueOf(mAula.getLongitude()));
 
-            AndroidNetworking.get(urlRoot + "aulas/create")
+            AndroidNetworking.post(urlRoot + "aulas/create")
                     .setTag("TCC")
                     .addQueryParameter("materia", String.valueOf(mMateria.getId()))
                     .addQueryParameter("dataAula",String.valueOf(new DateTime( mAula.getDataAula())))
@@ -292,12 +308,13 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback, Loc
 
                 @Override
                 public void onError(ANError e) {
-                    Log.i(TAG, e.getMessage());
-                    Log.i(TAG, e.getLocalizedMessage());
-                    Log.i(TAG, e.getCause() + "");
-                    Log.i(TAG, e.getStackTrace().toString());
                     e.printStackTrace();
-                    Log.i(TAG, "Erro:" + e.getMessage());
+//                    Log.i(TAG, e.getMessage());
+//                    Log.i(TAG, e.getLocalizedMessage());
+//                    Log.i(TAG, e.getCause() + "");
+//                    Log.i(TAG, e.getStackTrace().toString());
+//                    e.printStackTrace();
+//                    Log.i(TAG, "Erro:" + e.getMessage());
                 }
             });
         }

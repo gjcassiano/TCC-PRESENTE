@@ -1,0 +1,34 @@
+<div >
+
+    <md-card>
+
+        <md-card-title-text class="md-headline" layout="column" layout-padding  >
+            <md-input-container layout-marging >
+                <label>Alunos</label>
+                <!--<input ng-model="tag.find">-->
+            </md-input-container>
+        </md-card-title-text>
+
+        <md-list>
+            <md-list-item ng-repeat="item in todos" layout="row" ng-click="onClickTag($index)"
+            ng-class="{selectedIndex: selectedIndex===$index}">
+            <span class="md-body-2" >{{ item.userType == 1 ? 'Professor': 'Aluno' }}</span>
+            <span class="md-body-1" layout-padding>{{ item.name }}</span>
+            <ul class="md-secondary md-body-1" layout-padding >{{ item.matricula }}</ul>
+            <!-- <md-checkbox class="md-secondary" ng-model="item.selected"></md-checkbox> -->
+
+            <md-icon class="md-secondary" ng-click="deletar($index)">
+                <i class="material-icons md-48 center" >edit</i>
+            </md-icon>
+
+            </md-list-item>
+        </md-list>
+
+    </md-card>
+
+
+    <md-button style= "margin-right : 14px;" class="md-fab md-raised" ng-click="navigate('alunos/criar')">
+        <i class="material-icons md-48 center" >person_add</i>
+    </md-button>
+
+</div>

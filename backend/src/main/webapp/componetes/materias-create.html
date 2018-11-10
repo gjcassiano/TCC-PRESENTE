@@ -1,0 +1,52 @@
+<md-card layout-padding>
+
+    <md-card-title-text class="md-headline" layout="column" layout-padding  >
+        <md-input-container layout-marging >
+            <label>Criar materia</label>
+        </md-input-container>
+    </md-card-title-text>
+
+    <md-content class="md-block" >
+
+        <md-input-container class="md-block" >
+            <label>Nome</label>
+            <input ng-model="materia.nome">
+        </md-input-container>
+        <div layout="row">
+            <md-input-container flex="10">
+                <label>Sigla</label>
+                <input ng-model="materia.sigla">
+            </md-input-container>
+
+            <md-input-container flex="90">
+                <label>Professor relacionado</label>
+                <md-select name="type" ng-model="materia.professor" required>
+                    <md-option ng-value="opt" ng-repeat="opt in professores">{{ opt.name }}</md-option>
+                    <!--<md-option value="1">Renzo Paranaíba Mesquita</md-option>-->
+                    <!--<md-option value="2">Edielson Prevato Frigieri</md-option>-->
+                    <!--<md-option value="3">Evandro Luis Brandão Gomes</md-option>-->
+                    <!--<md-option value="4">Egídio Raimundo Neto</md-option>-->
+                    <!--<md-option value="5">Felipe Andery Reis</md-option>-->
+                    <!--<md-option value="6">Yvo Marcelo Chiaradia Masselli</md-option>-->
+                </md-select>
+            </md-input-container>
+        </div>
+
+        <md-list>
+            <md-list-item ng-repeat="item in alunos" layout="row"
+                          ng-class="{selectedIndex: selectedIndex===$index}">
+                <span class="md-body-1" layout-padding>{{ item.name }}</span>
+                <ul class="md-secondary md-body-1" layout-padding >{{ item.matricula }}</ul>
+                 <md-checkbox class="md-secondary" ng-model="item.selected"></md-checkbox>
+
+            </md-list-item>
+        </md-list>
+
+        <md-input-container>
+            <!--<md-button class="md-raised">Cancelar</md-button>-->
+            <md-button ng-click="criar(materia)" class="md-raised">Criar</md-button>
+        </md-input-container>
+    </md-content>
+
+
+</md-card>

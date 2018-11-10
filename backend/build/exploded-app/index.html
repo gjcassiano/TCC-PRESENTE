@@ -1,0 +1,52 @@
+<html lang="en" ng-app="app">
+    <head>
+
+        <!-- Angular Material requires Angular.js Libraries -->
+        <script src="angular-files/angular.min.js"></script>
+        <script src="angular-files/angular-animate.min.js"></script>
+        <script src="angular-files/angular-aria.min.js"></script>
+        <script src="angular-files/angular-messages.min.js"></script>
+        <script src="angular-files/angular-route.js"></script>
+
+        <!-- style sheet -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/md-data-table/1.8.0/md-data-table-style.css" rel="stylesheet" type="text/css"/>
+        <!-- module -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/md-data-table/1.8.0/md-data-table.min.js"></script>
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              rel="stylesheet">
+
+        <!-- Angular Material Library -->
+        <script src="angular-files/angular-material.js"></script>
+        <!--Components -->
+
+        <script src="js/app.js"></script>
+        <script src="js/app-service.js"></script>
+        <script src="js/materia-controller.js"></script>
+        <script src="js/user-controller.js"></script>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/app-css.css">
+
+        <!-- Angular Material style sheet -->
+        <link rel="stylesheet" href="angular-files/angular-material.css">
+
+
+    </head>
+
+    <div class="view-animate-container">
+        <md-toolbar class="md-hue-2">
+            <div class="md-toolbar-tools">
+                <md-button class="md-fab label md-primary" ng-href="/#/index" >Home</md-button>
+                <h2 flex md-truncate>Presente</h2>
+
+                <section layout="row" layout-align="start center" layout-wrap>
+                    <md-button class="label" ng-href="/#/alunos">Alunos</md-button>
+                    <md-button class="label" ng-href="/#/materias">Materias</md-button>
+                </section>
+            </div>
+        </md-toolbar>
+        <div ng-view class="view-animate"></div>
+    </div>
+
+</html>
